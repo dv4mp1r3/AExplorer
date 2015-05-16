@@ -1,0 +1,5 @@
+Before start developing make sure that:
+1. you have Java Development Kit;
+2. adb can see your device (start in cmd 'adb devices' to check it).
+
+if your device is rooted, set startAsRoot parameter in true.
