@@ -4,86 +4,73 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
-public class BasicModel extends AbstractTableModel
-{
-	protected String[] columnNames;
-	protected /*Object[][]*/ Vector<Object[]> data = new Vector<Object[]>();
-	protected String cellOldValue = null;
-	protected int cellOldRow = -1, cellOldCol = -1;
+public class BasicModel extends AbstractTableModel {
 
-	public BasicModel()
-	{
-	}
+    protected String[] columnNames;
+    protected /*Object[][]*/ Vector<Object[]> data = new Vector<Object[]>();
+    protected String cellOldValue = null;
+    protected int cellOldRow = -1, cellOldCol = -1;
 
-	public int getColumnCount() 
-	{
-		return columnNames.length;
-	}
+    public BasicModel() {
+    }
 
-	public int getRowCount() 
-	{
-		return data.size();
-	}
+    public int getColumnCount() {
+        return columnNames.length;
+    }
 
-	@Override
-	public String getColumnName(int col) 
-	{
-		return columnNames[col];
-	}
+    public int getRowCount() {
+        return data.size();
+    }
 
-	public Object getValueAt(int row, int col) 
-	{
-		return data.get(row)[col];
-	}
+    @Override
+    public String getColumnName(int col) {
+        return columnNames[col];
+    }
 
-	@Override
-	public boolean isCellEditable(int row, int col)
-	{ 
-		return false; 
-	}
+    public Object getValueAt(int row, int col) {
+        return data.get(row)[col];
+    }
 
-	@Override
-	public void setValueAt(Object value, int row, int col) 
-	{
-		data.get(row)[col] = value;
-		fireTableCellUpdated(row, col);
-	}
+    @Override
+    public boolean isCellEditable(int row, int col) {
+        return false;
+    }
 
-	/**
-	 *
-	 * @param column
-	 * @return
-	 */
-	@Override
-	public Class getColumnClass(int column) 
-	{
-		Class clazz = String.class;
-		switch (column) 
-		{
-			case 0:
-				clazz = ImageIcon.class;
-				break;
-		}
-		return clazz;
-	}  
+    @Override
+    public void setValueAt(Object value, int row, int col) {
+        data.get(row)[col] = value;
+        fireTableCellUpdated(row, col);
+    }
 
-	public String getCellOldValue()
-	{
-		return cellOldValue;
-	}
+    /**
+     *
+     * @param column
+     * @return
+     */
+    @Override
+    public Class getColumnClass(int column) {
+        Class clazz = String.class;
+        switch (column) {
+            case 0:
+                clazz = ImageIcon.class;
+                break;
+        }
+        return clazz;
+    }
 
-	public int getCellOldCol()
-	{
-		return cellOldCol;
-	}
+    public String getCellOldValue() {
+        return cellOldValue;
+    }
 
-	public int getCellOldRow()
-	{
-		return cellOldRow;
-	}
+    public int getCellOldCol() {
+        return cellOldCol;
+    }
 
-	public void removeRow(int row) 
-	{
-		data.removeElementAt(row);
-	}
+    public int getCellOldRow() {
+        return cellOldRow;
+    }
+
+    public void removeRow(int row) {
+        data.removeElementAt(row);
+    }
 }

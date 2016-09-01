@@ -17,19 +17,20 @@ import structure.Explorer;
 import structure.IconController;
 import structure.ModelSPFolders;
 
-public class formExplorer extends javax.swing.JFrame implements TableModelListener
-{
-	private Explorer exp;
-	private DataReciever adb;
-	private int mouseClickCount = 0;
-	private String startupPath;
-	/**
-	 * Creates new form formExplorer
-	 */
-	public formExplorer() {
-		initComponents();
+public class formExplorer extends javax.swing.JFrame implements TableModelListener {
 
-	}
+    private Explorer exp;
+    private DataReciever adb;
+    private int mouseClickCount = 0;
+    private String startupPath;
+
+    /**
+     * Creates new form formExplorer
+     */
+    public formExplorer() {
+        initComponents();
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -49,9 +50,9 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextPaneDevice = new javax.swing.JTextPane();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTablePC = new CustomTable();
+        jTablePC = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableSP = new CustomTable();
+        jTableSP = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -82,10 +83,6 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 jButton1MousePressed(evt);
             }
         });
-
-        jTextFieldPC.setText("jTextField1");
-
-        jTextFieldSP.setText("jTextField1");
 
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/arrow_refresh.png"))); // NOI18N
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -231,85 +228,76 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-	try 
-	{
-		Config.init();
+        try {
+            Config.init();
 
-		adb = new DataReciever();
+            adb = new DataReciever();
 
-		 ArrayList<String> arrDevices = adb.getDevices(false);
-		if (arrDevices.isEmpty())
-			throw new Exception("No device.");
+            ArrayList<String> arrDevices = adb.getDevices(false);
+            if (arrDevices.isEmpty()) {
+                throw new Exception("No device.");
+            }
 
-		String tmpDeviceName = arrDevices.get(0);
+            String tmpDeviceName = arrDevices.get(0);
 
-		// if ADB service does not executed at current time
-		if (tmpDeviceName.equals("* daemon started successfully *"))
-			tmpDeviceName = adb.getDevices(false).get(0);
+            // if ADB service does not executed at current time
+            if (tmpDeviceName.equals("* daemon started successfully *")) {
+                tmpDeviceName = adb.getDevices(false).get(0);
+            }
 
-		DataReciever.selectedDevice = tmpDeviceName;
+            DataReciever.selectedDevice = tmpDeviceName;
 
-		startupPath = new File("").getAbsolutePath(); 
-		String path = System.getProperty("user.dir");
-		exp = new Explorer(path);
+            startupPath = new File("").getAbsolutePath();
+            String path = System.getProperty("user.dir");
+            exp = new Explorer(path);
 
-		jTextFieldPC.setText(path);
-		jTextFieldSP.setText("/");
+            jTextFieldPC.setText(path);
+            jTextFieldSP.setText("/");
 
-		jTextPaneDevice.setText(tmpDeviceName);
+            jTextPaneDevice.setText(tmpDeviceName);
 
-		jTablePC.setModel(exp.setPath(), null);
-		jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
-	}
-	catch (IOException e)
-	{
-		e.printStackTrace();
-		// Something problem with settings.ini or other file
-	}
-	catch (Exception e) 
-	{
-		e.printStackTrace();
-		//System.exit(1);
-	}
+            jTablePC.setModel(exp.setPath(), null);
+            jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Something problem with settings.ini or other file
+        } catch (Exception e) {
+            e.printStackTrace();
+            //System.exit(1);
+        }
     }//GEN-LAST:event_formWindowOpened
 
-    
+
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-	try 
-	{
-		jTextFieldPC.setText(exp.getPath());
-		jTablePC.setModel(exp.setPath(), null);
-	} 
-	catch (Exception ex) { ex.printStackTrace(); }
+        try {
+            jTextFieldPC.setText(exp.getPath());
+            jTablePC.setModel(exp.setPath(), null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jTablePCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePCMouseClicked
-	//mouseClickCount++;
-	if (++mouseClickCount == 2 && evt.getButton() == MouseEvent.BUTTON1) 
-	{
-		try 
-		{ 
-			mouseClickCount = 0;
-			int selectedRow = jTablePC.getSelectedRow();
+        //mouseClickCount++;
+        if (++mouseClickCount == 2 && evt.getButton() == MouseEvent.BUTTON1) {
+            try {
+                mouseClickCount = 0;
+                int selectedRow = jTablePC.getSelectedRow();
 //			int selectedCol = jTablePC.getSelectedColumn();
-			String file = (String) jTablePC.getValueAt(selectedRow, 1);
-			if (file.equals("..")) 
-			{
-				jTablePC.setModel(exp.getUpperDirectory(), null);
-				jTextFieldPC.setText(exp.getPath());
-			} 
-			else 
-			{
-				if (exp.getType(file) == Explorer.DIRECTORY_ITEM_FOLDER) 
-				{
-					jTablePC.setModel(exp.setPath(), null);
-					jTextFieldPC.setText(exp.getPath());
-				}
-			}
-		} catch (Exception ex) { ex.printStackTrace(); }
+                String file = (String) jTablePC.getValueAt(selectedRow, 1);
+                if (file.equals("..")) {
+                    jTablePC.setModel(exp.getUpperDirectory(), null);
+                    jTextFieldPC.setText(exp.getPath());
+                } else if (exp.getType(file) == Explorer.DIRECTORY_ITEM_FOLDER) {
+                    jTablePC.setModel(exp.setPath(), null);
+                    jTextFieldPC.setText(exp.getPath());
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-	} 
-	else if (evt.getButton() == MouseEvent.BUTTON3) { }
+        } else if (evt.getButton() == MouseEvent.BUTTON3) {
+        }
     }//GEN-LAST:event_jTablePCMouseClicked
 
     private void jTablePCMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePCMouseMoved
@@ -317,196 +305,162 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     }//GEN-LAST:event_jTablePCMouseMoved
 
     private void jTableSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSPMouseClicked
-	if (++mouseClickCount == 2 && evt.getButton() == MouseEvent.BUTTON1) 
-	{
-		mouseClickCount = 0;
-		ModelSPFolders model = null;
-		String resultPath = null;
+        if (++mouseClickCount == 2 && evt.getButton() == MouseEvent.BUTTON1) {
+            mouseClickCount = 0;
+            ModelSPFolders model = null;
+            String resultPath = null;
 
-		try 
-		{ 
-			int selectedRow = jTableSP.getSelectedRow();
-			//int selectedCol = jTableSP.getSelectedColumn();
-			String file = (String) jTableSP.getValueAt(selectedRow, 1);
-			int i = 0;
+            try {
+                int selectedRow = jTableSP.getSelectedRow();
+                //int selectedCol = jTableSP.getSelectedColumn();
+                String file = (String) jTableSP.getValueAt(selectedRow, 1);
+                int i = 0;
 
-			// checking directory type              
-			if (file.equals("..")) // upper directory
-			{
-				String currentPath = jTextFieldSP.getText();
-				i = currentPath.lastIndexOf('/');
+                // checking directory type              
+                if (file.equals("..")) // upper directory
+                {
+                    String currentPath = jTextFieldSP.getText();
+                    i = currentPath.lastIndexOf('/');
 
-				if (i != 0) 
-					resultPath = currentPath.substring(0, i); 
-				else 
-					resultPath = "/";       
-			} 
-			else if ((i = file.indexOf(" -> ")) > 0) // link
-			{
-				file = file.substring(i + 4, file.length());
-				if (file.indexOf('/') != 0) 
-					return;
+                    if (i != 0) {
+                        resultPath = currentPath.substring(0, i);
+                    } else {
+                        resultPath = "/";
+                    }
+                } else if ((i = file.indexOf(" -> ")) > 0) // link
+                {
+                    file = file.substring(i + 4, file.length());
+                    if (file.indexOf('/') != 0) {
+                        return;
+                    }
 
-				try 
-				{
-					Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
-				} 
-				catch (NumberFormatException ex) 
-				{
-					resultPath = file;
-				}
-			} 
-			else // unner directory
-			{
-				try 
-				{
-					Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
-				} 
-				catch (NumberFormatException ex) 
-				{
-					if (!jTextFieldSP.getText().equals("/"))
-						resultPath = jTextFieldSP.getText() + '/' + (String) jTableSP.getValueAt(selectedRow, 1);
-					else 
-						resultPath = '/' + (String) jTableSP.getValueAt(selectedRow, 1);   
-				}
-			}
+                    try {
+                        Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
+                    } catch (NumberFormatException ex) {
+                        resultPath = file;
+                    }
+                } else // unner directory
+                {
+                    try {
+                        Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
+                    } catch (NumberFormatException ex) {
+                        if (!jTextFieldSP.getText().equals("/")) {
+                            resultPath = jTextFieldSP.getText() + '/' + (String) jTableSP.getValueAt(selectedRow, 1);
+                        } else {
+                            resultPath = '/' + (String) jTableSP.getValueAt(selectedRow, 1);
+                        }
+                    }
+                }
 
-			model = adb.getDirContent(resultPath);
-		} 
-		catch (Exception ex) { ex.printStackTrace(); }
-		finally
-		{
-			// model = null - invalid results
-			if (model != null)
-			{
-				jTableSP.setModel(model, this);
-				jTextFieldSP.setText(resultPath);
-			}   
-		}
-	}
+                model = adb.getDirContent(resultPath);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                // model = null - invalid results
+                if (model != null) {
+                    jTableSP.setModel(model, this);
+                    jTextFieldSP.setText(resultPath);
+                }
+            }
+        }
 
     }//GEN-LAST:event_jTableSPMouseClicked
 
     private void jTableSPMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSPMouseMoved
-	mouseClickCount = 0;
+        mouseClickCount = 0;
     }//GEN-LAST:event_jTableSPMouseMoved
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-	if (evt.getButton() == MouseEvent.BUTTON1) {
-		try 
-		{
-			jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
-		} 
-		catch (Exception ex) { ex.printStackTrace(); }
-	}
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            try {
+                jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jTableSPMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSPMouseReleased
-	final int selRows[] = jTableSP.getSelectedRows();
-	if (evt.getButton() == MouseEvent.BUTTON3 && selRows.length > 0) 
-	{
-		jPopupMenu1.removeAll();
-		JMenuItem miDelete, miView, miRename, miTransfer;
-		miDelete = new JMenuItem("Delete", IconController.mDelete);
-		miView = new JMenuItem("View as Text", IconController.mView);
-		miRename = new JMenuItem("Rename", IconController.mRename);
-		miTransfer = new JMenuItem("Send to PC", IconController.mTransferPC);
-		final TableModelListener obj = this;
-		miDelete.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				for (int i = 0; i < selRows.length; i++) 
-				{
-					String ext = (String) jTableSP.getValueAt(selRows[i], 2);
-					String path = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(selRows[i], 1);
-					if (ext != null) 
-						path += ext;
-					adb.deleteFile(path);
-				}
-				try 
-				{
-					jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
-				} 
-				catch (Exception ex) 
-				{
-					Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-		});
+        final int selRows[] = jTableSP.getSelectedRows();
+        if (evt.getButton() == MouseEvent.BUTTON3 && selRows.length > 0) {
+            jPopupMenu1.removeAll();
+            JMenuItem miDelete, miView, miRename, miTransfer;
+            miDelete = new JMenuItem("Delete", IconController.mDelete);
+            miView = new JMenuItem("View as Text", IconController.mView);
+            miRename = new JMenuItem("Rename", IconController.mRename);
+            miTransfer = new JMenuItem("Send to PC", IconController.mTransferPC);
+            final TableModelListener obj = this;
+            miDelete.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    for (int i = 0; i < selRows.length; i++) {
+                        String ext = (String) jTableSP.getValueAt(selRows[i], 2);
+                        String path = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(selRows[i], 1);
+                        if (ext != null) {
+                            path += ext;
+                        }
+                        adb.deleteFile(path);
+                    }
+                    try {
+                        jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
+                    } catch (Exception ex) {
+                        Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
 
+            miTransfer.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    for (int i = 0; i < selRows.length; i++) {
+                        final String Spath = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
+                        final String DPath = jTextFieldPC.getText() + File.separator + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
+                        adb.pullFile(Spath, DPath);
+                    }
 
+                    try {
+                        jTablePC.setModel(exp.setPath(), null);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        //Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
 
-		miTransfer.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				for (int i = 0; i < selRows.length; i++) 
-				{
-					final String Spath = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
-					final String DPath = jTextFieldPC.getText() + File.separator + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
-					adb.pullFile(Spath, DPath);
-				}
+            try {
+                final int i = jTableSP.getSelectedRow();
+                Object tmp = jTableSP.getValueAt(i, 5);
+                if (selRows.length == 1 && (tmp != null && tmp.toString().length() > 0)) {
+                    miView.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            final String Spath = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(i, 1) + jTableSP.getValueAt(i, 2);
+                            final String DPath = startupPath + File.separator + "tmp" + File.separator + jTableSP.getValueAt(i, 1) + jTableSP.getValueAt(i, 2);
+                            adb.pullFile(Spath, DPath);
 
-				try 
-				{
-					jTablePC.setModel(exp.setPath(), null);
-				} 
-				catch (Exception ex) 
-				{
-					ex.printStackTrace();
-					//Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-		});
+                            java.awt.EventQueue.invokeLater(new Runnable() {
+                                public void run() {
+                                    new formWatcher(DPath, Spath, true).setVisible(true);
+                                }
+                            });
+                        }
+                    });
 
+                    miRename.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // Rename
+                        }
+                    });
 
-		try 
-		{
-			final int i = jTableSP.getSelectedRow();
-			Object tmp = jTableSP.getValueAt(i, 5);
-			if (selRows.length == 1 && (tmp != null && tmp.toString().length() > 0)) 
-			{
-				miView.addActionListener(new ActionListener() 
-				{
-					public void actionPerformed(ActionEvent e) 
-					{
-						final String Spath = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(i, 1) + jTableSP.getValueAt(i, 2);
-						final String DPath = startupPath + File.separator + "tmp" + File.separator + jTableSP.getValueAt(i, 1) + jTableSP.getValueAt(i, 2);
-						adb.pullFile(Spath, DPath);
+                    jPopupMenu1.add(miView);
+                    jPopupMenu1.add(miRename);
+                }
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
 
-						java.awt.EventQueue.invokeLater(new Runnable() 
-						{
-							public void run() 
-							{
-								new formWatcher(DPath, Spath, true).setVisible(true);
-							}
-						});
-					}
-				});
-
-				miRename.addActionListener(new ActionListener() 
-				{
-					public void actionPerformed(ActionEvent e) 
-					{
-						// Rename
-					}
-				});
-
-				jPopupMenu1.add(miView);
-				jPopupMenu1.add(miRename);
-			}
-		} 
-		catch (NullPointerException ex) 
-		{
-			ex.printStackTrace();
-		}
-
-		jPopupMenu1.add(miDelete);
-		jPopupMenu1.add(miTransfer);
-		jPopupMenu1.show(jTableSP, evt.getX(), evt.getY());
-	}
+            jPopupMenu1.add(miDelete);
+            jPopupMenu1.add(miTransfer);
+            jPopupMenu1.show(jTableSP, evt.getX(), evt.getY());
+        }
     }//GEN-LAST:event_jTableSPMouseReleased
 
     private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
@@ -514,11 +468,12 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     }//GEN-LAST:event_jButton1MousePressed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-	try 
-	{
-		String screnShotPath = adb.makeScreenshot();
-		jTablePC.setModel(exp.setPath(), null);
-	} catch (Exception e) { e.printStackTrace(); }
+        try {
+            String screnShotPath = adb.makeScreenshot();
+            jTablePC.setModel(exp.setPath(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // показать уведомление о том, что скриншот сохранен
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
@@ -526,119 +481,95 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     }//GEN-LAST:event_jPopupMenu2MouseReleased
 
     private void jTablePCMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePCMouseReleased
-	final int selRows[] = jTablePC.getSelectedRows();
-	if (evt.getButton() == MouseEvent.BUTTON3 && selRows.length > 0) 
-	{
-		jPopupMenu2.removeAll();
-		JMenuItem miView, miDelete, miTransfer;
-		miDelete = new JMenuItem("Delete", IconController.mDelete);
-		miView = new JMenuItem("View as Text", IconController.mView);
-		miTransfer = new JMenuItem("Send to device", IconController.mTransferSP);
+        final int selRows[] = jTablePC.getSelectedRows();
+        if (evt.getButton() == MouseEvent.BUTTON3 && selRows.length > 0) {
+            jPopupMenu2.removeAll();
+            JMenuItem miView, miDelete, miTransfer;
+            miDelete = new JMenuItem("Delete", IconController.mDelete);
+            miView = new JMenuItem("View as Text", IconController.mView);
+            miTransfer = new JMenuItem("Send to device", IconController.mTransferSP);
 
-		miDelete.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				try 
-				{
-					for (int i = 0; i < selRows.length; i++) 
-					{
-						String ext = (String) jTablePC.getValueAt(selRows[i], 2);
-						String Spath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(selRows[i], 1);
-						File f = new File(Spath + ext);
+            miDelete.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        for (int i = 0; i < selRows.length; i++) {
+                            String ext = (String) jTablePC.getValueAt(selRows[i], 2);
+                            String Spath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(selRows[i], 1);
+                            File f = new File(Spath + ext);
 
-						if (f.isFile()) 
-							f.delete(); 
-						else 
-							Explorer.deleteDir(f);
-					}
-					jTablePC.setModel(exp.setPath(), null);
-				} 
-				catch (Exception ex) 
-				{
-					ex.printStackTrace();
-					//Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-		});
-		final TableModelListener obj = this;
-		miTransfer.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				for (int i = 0; i < selRows.length; i++) 
-				{
-					String Spath = jTextFieldSP.getText() + "/" + jTablePC.getValueAt(selRows[i], 1) + jTablePC.getValueAt(selRows[i], 2);
-					String pPath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(selRows[i], 1) + jTablePC.getValueAt(selRows[i], 2);
-					adb.pushFile(pPath, Spath);
-				}
-				try 
-				{
-					jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
-				} 
-				catch (Exception ex) 
-				{
-					Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-		});
+                            if (f.isFile()) {
+                                f.delete();
+                            } else {
+                                Explorer.deleteDir(f);
+                            }
+                        }
+                        jTablePC.setModel(exp.setPath(), null);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        //Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            final TableModelListener obj = this;
+            miTransfer.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    for (int i = 0; i < selRows.length; i++) {
+                        String Spath = jTextFieldSP.getText() + "/" + jTablePC.getValueAt(selRows[i], 1) + jTablePC.getValueAt(selRows[i], 2);
+                        String pPath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(selRows[i], 1) + jTablePC.getValueAt(selRows[i], 2);
+                        adb.pushFile(pPath, Spath);
+                    }
+                    try {
+                        jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
+                    } catch (Exception ex) {
+                        Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
 
-		if (selRows.length == 1 && jTablePC.getValueAt(jTablePC.getSelectedRow(), 3) != null) 
-		{
-			miView.addActionListener(new ActionListener() 
-			{
-				public void actionPerformed(ActionEvent e) 
-				{
-					int i = jTablePC.getSelectedRow();
-					final String Spath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(i, 1) + jTablePC.getValueAt(i, 2);
-					java.awt.EventQueue.invokeLater(new Runnable() 
-					{
-						public void run() 
-						{
-							new formWatcher(Spath, null, false).setVisible(true);
-						}
-					});
-				}
-			});
+            if (selRows.length == 1 && jTablePC.getValueAt(jTablePC.getSelectedRow(), 3) != null) {
+                miView.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int i = jTablePC.getSelectedRow();
+                        final String Spath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(i, 1) + jTablePC.getValueAt(i, 2);
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            public void run() {
+                                new formWatcher(Spath, null, false).setVisible(true);
+                            }
+                        });
+                    }
+                });
 
-			jPopupMenu2.add(miView);
-		}
+                jPopupMenu2.add(miView);
+            }
 
-		jPopupMenu2.add(miDelete);
-		jPopupMenu2.add(miTransfer);
+            jPopupMenu2.add(miDelete);
+            jPopupMenu2.add(miTransfer);
 
-		jPopupMenu2.show(jTablePC, evt.getX(), evt.getY());
-	}
+            jPopupMenu2.show(jTablePC, evt.getX(), evt.getY());
+        }
     }//GEN-LAST:event_jTablePCMouseReleased
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-	try 
-	{
-		String screnShotPath = adb.makeScreenshot();
-		jTablePC.setModel(exp.setPath(), null);
-	} 
-	catch (Exception e) { e.printStackTrace(); }
+        try {
+            String screnShotPath = adb.makeScreenshot();
+            jTablePC.setModel(exp.setPath(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-	java.awt.EventQueue.invokeLater(new Runnable() 
-	{
-		public void run() 
-		{
-			try 
-			{
-				new formPackages(DataReciever.getPackages()).setVisible(true);
-			} 
-			catch (IOException ex) 
-			{
-				Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
-			} 
-			catch (InterruptedException ex) 
-			{
-				Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	});
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new formPackages(DataReciever.getPackages()).setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -650,7 +581,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        /*try {
+ /*try {
          for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
          if ("Nimbus".equals(info.getName())) {
          javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -690,42 +621,40 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private CustomTable jTablePC;
-    private CustomTable jTableSP;
+    private javax.swing.JTable jTablePC;
+    private javax.swing.JTable jTableSP;
     private javax.swing.JTextField jTextFieldPC;
     private javax.swing.JTextField jTextFieldSP;
     private javax.swing.JTextPane jTextPaneDevice;
     // End of variables declaration//GEN-END:variables
 
-	public void tableChanged(TableModelEvent e) 
-	{
-		if (e.getType() == TableModelEvent.UPDATE)
-		{
+    public void tableChanged(TableModelEvent e) {
+        if (e.getType() == TableModelEvent.UPDATE) {
 
-			ModelSPFolders model = (ModelSPFolders)e.getSource();
-			if (model != null)
-			{
-				if (model.getValueAt(model.getCellOldRow(), 1).toString().equals(model.getCellOldValue()))
-					return;
+            ModelSPFolders model = (ModelSPFolders) e.getSource();
+            if (model != null) {
+                if (model.getValueAt(model.getCellOldRow(), 1).toString().equals(model.getCellOldValue())) {
+                    return;
+                }
 
-				String dir = jTextFieldSP.getText();
-				if (dir.length() != 1)
-					dir += '/';
+                String dir = jTextFieldSP.getText();
+                if (dir.length() != 1) {
+                    dir += '/';
+                }
 
-				String ext = model.getValueAt(model.getCellOldRow(), 2).toString();
-				String newValue = dir +  
-						model.getValueAt(model.getCellOldRow(), 1).toString() + 
-						ext;
-				String oldValue = dir + model.getCellOldValue() + ext;
+                String ext = model.getValueAt(model.getCellOldRow(), 2).toString();
+                String newValue = dir
+                        + model.getValueAt(model.getCellOldRow(), 1).toString()
+                        + ext;
+                String oldValue = dir + model.getCellOldValue() + ext;
 
-				if (!adb.renameFile(oldValue, newValue))
-				{                    
-					jTableSP.setValueAt(model.getCellOldValue(),  
-							model.getCellOldRow(),
-							model.getCellOldCol());   
-				}         
-			}
-		}
+                if (!adb.renameFile(oldValue, newValue)) {
+                    jTableSP.setValueAt(model.getCellOldValue(),
+                            model.getCellOldRow(),
+                            model.getCellOldCol());
+                }
+            }
+        }
 
-	}
+    }
 }

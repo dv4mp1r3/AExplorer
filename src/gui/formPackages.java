@@ -8,30 +8,26 @@ public class formPackages extends javax.swing.JFrame {
 
     /**
      * Creates new form formPackages
-	 * @param mp
+     *
+     * @param mp
      */
-    
-    public formPackages(ModelPackage mp) 
-    {
-	initComponents();
-	try
-	{
-	   jTablePackages.setModel(mp, null);
-	}
-	catch(Exception e)
-	{
-		e.printStackTrace();
+    public formPackages(ModelPackage mp) {
+        initComponents();
+        try {
+            jTablePackages.setModel(mp, null);
+        } catch (Exception e) {
+            e.printStackTrace();
 
-	}
-        
+        }
+
     }
-    
-    private void checkTabeSelection()
-    {
-	if (jTablePackages.getSelectedColumn() > 0)
-		 jButton2.setEnabled(true);
-	else
-		 jButton2.setEnabled(false);
+
+    private void checkTabeSelection() {
+        if (jTablePackages.getSelectedColumn() > 0) {
+            jButton2.setEnabled(true);
+        } else {
+            jButton2.setEnabled(false);
+        }
     }
 
     /**
@@ -122,25 +118,22 @@ public class formPackages extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Uninstall selected programs
-	try
-	{
+        try {
 
-		String[] args = {DataReciever.adbPath,  "-s", DataReciever.selectedDevice, "uninstall", ""};
-		int[] rows = jTablePackages.getSelectedRows();
-		for (int i = 0; i < rows.length; i++)
-		{
-			args[args.length - 1] = jTablePackages.getValueAt(rows[i], 1).toString();           
-			String report = DataReciever.executeCommand(args);
-			if (report.indexOf("Success") == 0)
-			   ((BasicModel)jTablePackages.getModel()).removeRow(rows[i]);
-				//jTablePackages.setModel(DataReciever.getPackages(), null);
-		} 
-	}
-	catch(Exception e)
-	{
-	   e.printStackTrace();
-	}
-        
+            String[] args = {DataReciever.adbPath, "-s", DataReciever.selectedDevice, "uninstall", ""};
+            int[] rows = jTablePackages.getSelectedRows();
+            for (int i = 0; i < rows.length; i++) {
+                args[args.length - 1] = jTablePackages.getValueAt(rows[i], 1).toString();
+                String report = DataReciever.executeCommand(args);
+                if (report.indexOf("Success") == 0) {
+                    ((BasicModel) jTablePackages.getModel()).removeRow(rows[i]);
+                }
+                //jTablePackages.setModel(DataReciever.getPackages(), null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
