@@ -1,5 +1,6 @@
 package structure;
 
+import java.io.File;
 import javax.swing.ImageIcon;
 
 public class IconController {
@@ -8,7 +9,7 @@ public class IconController {
             icWord, icExcel, icScript, icBash, icUntyped;
     public static ImageIcon mDelete, mView, mRename, mTransferPC, mTransferSP;
 
-    private static String iconDirectory = "src\\gfx\\";
+    private static String iconDirectory = "src"+File.separator+"gfx"+File.separator;
 
     private static String[] fileMusic = {".mp3", ".wav", ".wave", ".flac", ".aac", ".ogg", ".mid"},
             fileVideo = {".mkv", ".avi", ".wmv", ".flv", ".mp4"},

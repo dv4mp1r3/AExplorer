@@ -1,8 +1,13 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package gui;
 
 import adb.DataReciever;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -12,17 +17,23 @@ import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import structure.Config;
 import structure.Explorer;
 import structure.IconController;
 import structure.ModelSPFolders;
 
+/**
+ *
+ * @author divan
+ */
 public class formExplorer extends javax.swing.JFrame implements TableModelListener {
 
     private Explorer exp;
     private DataReciever adb;
     private int mouseClickCount = 0;
     private String startupPath;
+    private static boolean needEdit = false;
 
     /**
      * Creates new form formExplorer
@@ -50,9 +61,9 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextPaneDevice = new javax.swing.JTextPane();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTablePC = new javax.swing.JTable();
+        jTablePC = new CustomTable();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableSP = new javax.swing.JTable();
+        jTableSP = new CustomTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -83,6 +94,10 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 jButton1MousePressed(evt);
             }
         });
+
+        jTextFieldPC.setText("jTextField1");
+
+        jTextFieldSP.setText("jTextField1");
 
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gfx/arrow_refresh.png"))); // NOI18N
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -234,7 +249,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             adb = new DataReciever();
 
             ArrayList<String> arrDevices = adb.getDevices(false);
-            if (arrDevices.isEmpty()) {
+            if (arrDevices.size() == 0) {
                 throw new Exception("No device.");
             }
 
@@ -272,6 +287,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
         try {
             jTextFieldPC.setText(exp.getPath());
             jTablePC.setModel(exp.setPath(), null);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -283,7 +299,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             try {
                 mouseClickCount = 0;
                 int selectedRow = jTablePC.getSelectedRow();
-//			int selectedCol = jTablePC.getSelectedColumn();
+                int selectedCol = jTablePC.getSelectedColumn();
                 String file = (String) jTablePC.getValueAt(selectedRow, 1);
                 if (file.equals("..")) {
                     jTablePC.setModel(exp.getUpperDirectory(), null);
@@ -312,7 +328,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
             try {
                 int selectedRow = jTableSP.getSelectedRow();
-                //int selectedCol = jTableSP.getSelectedColumn();
+                int selectedCol = jTableSP.getSelectedColumn();
                 String file = (String) jTableSP.getValueAt(selectedRow, 1);
                 int i = 0;
 
@@ -320,7 +336,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 if (file.equals("..")) // upper directory
                 {
                     String currentPath = jTextFieldSP.getText();
-                    i = currentPath.lastIndexOf('/');
+                    i = currentPath.lastIndexOf("/");
 
                     if (i != 0) {
                         resultPath = currentPath.substring(0, i);
@@ -330,7 +346,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 } else if ((i = file.indexOf(" -> ")) > 0) // link
                 {
                     file = file.substring(i + 4, file.length());
-                    if (file.indexOf('/') != 0) {
+                    if (file.indexOf("/") != 0) {
                         return;
                     }
 
@@ -345,9 +361,9 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
                     } catch (NumberFormatException ex) {
                         if (!jTextFieldSP.getText().equals("/")) {
-                            resultPath = jTextFieldSP.getText() + '/' + (String) jTableSP.getValueAt(selectedRow, 1);
+                            resultPath = jTextFieldSP.getText() + "/" + (String) jTableSP.getValueAt(selectedRow, 1);
                         } else {
-                            resultPath = '/' + (String) jTableSP.getValueAt(selectedRow, 1);
+                            resultPath = "/" + (String) jTableSP.getValueAt(selectedRow, 1);
                         }
                     }
                 }
@@ -395,7 +411,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 public void actionPerformed(ActionEvent e) {
                     for (int i = 0; i < selRows.length; i++) {
                         String ext = (String) jTableSP.getValueAt(selRows[i], 2);
-                        String path = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(selRows[i], 1);
+                        String path = jTextFieldSP.getText() + File.separator + jTableSP.getValueAt(selRows[i], 1);
                         if (ext != null) {
                             path += ext;
                         }
@@ -412,8 +428,8 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             miTransfer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     for (int i = 0; i < selRows.length; i++) {
-                        final String Spath = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
-                        final String DPath = jTextFieldPC.getText() + File.separator + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
+                        String Spath = jTextFieldSP.getText() + "/" + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
+                        String DPath = jTextFieldPC.getText() + File.separator + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
                         adb.pullFile(Spath, DPath);
                     }
 
@@ -432,7 +448,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 if (selRows.length == 1 && (tmp != null && tmp.toString().length() > 0)) {
                     miView.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            final String Spath = jTextFieldSP.getText() + '/' + jTableSP.getValueAt(i, 1) + jTableSP.getValueAt(i, 2);
+                            final String Spath = jTextFieldSP.getText() + "/" + jTableSP.getValueAt(i, 1) + jTableSP.getValueAt(i, 2);
                             final String DPath = startupPath + File.separator + "tmp" + File.separator + jTableSP.getValueAt(i, 1) + jTableSP.getValueAt(i, 2);
                             adb.pullFile(Spath, DPath);
 
@@ -447,6 +463,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     miRename.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             // Rename
+
                         }
                     });
 
@@ -621,8 +638,8 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTablePC;
-    private javax.swing.JTable jTableSP;
+    private CustomTable jTablePC;
+    private CustomTable jTableSP;
     private javax.swing.JTextField jTextFieldPC;
     private javax.swing.JTextField jTextFieldSP;
     private javax.swing.JTextPane jTextPaneDevice;
@@ -639,7 +656,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
                 String dir = jTextFieldSP.getText();
                 if (dir.length() != 1) {
-                    dir += '/';
+                    dir += "/";
                 }
 
                 String ext = model.getValueAt(model.getCellOldRow(), 2).toString();

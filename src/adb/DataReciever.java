@@ -20,7 +20,7 @@ public class DataReciever {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
     private File saveLocation;
 
-    public static String adbPath = "adb";
+    public static String adbPath = "/usr/local/bin/adb";
 
     public DataReciever() {
         saveLocation = new File(Config.saveLocation());
@@ -191,7 +191,7 @@ public class DataReciever {
             int lineCount = 0;
 
             while ((line = br.readLine()) != null) {
-                if (line.length() == 0) {
+                if (line.length() == 0 || line.indexOf("Permission denied") > 0) {
                     continue;
                 }
 
@@ -267,7 +267,7 @@ public class DataReciever {
                                     date = str;
                                 }
                                 break;
-                            case 5:
+                            case 5: //date
                                 if (devOutput) {
                                     date = str;
                                     break;
@@ -276,7 +276,7 @@ public class DataReciever {
                                     filename = str;
                                 } else {
                                     date += ' ' + str;
-                                }
+                                }                               
                                 break;
                             case 6:
                                 if (devOutput) {
@@ -375,7 +375,7 @@ public class DataReciever {
         try {
             Process process = new ProcessBuilder(adbPath, "-s", selectedDevice, "push", source, destination).start();
             process.waitFor();
-            Logger.writeToLog(source + LanguageStrings.getProperty("pushFailedLog") + destination);
+            //Logger.writeToLog(source + LanguageStrings.getProperty("pushFailedLog") + destination);
         } catch (IOException e) {
             logAndStackTrace("PushFile: can't load file " + source, e);
         } catch (InterruptedException e) {
