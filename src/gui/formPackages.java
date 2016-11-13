@@ -1,47 +1,33 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import adb.DataReciever;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 import structure.BasicModel;
 import structure.ModelPackage;
 
-/**
- *
- * @author Divan
- */
 public class formPackages extends javax.swing.JFrame {
 
     /**
      * Creates new form formPackages
+     *
+     * @param mp
      */
-    
-    public formPackages(ModelPackage mp) 
-    {
+    public formPackages(ModelPackage mp) {
         initComponents();
-        try
-        {
-           jTablePackages.setModel(mp, null);
-        }
-        catch(Exception e)
-        {
+        try {
+            jTablePackages.setModel(mp, null);
+        } catch (Exception e) {
             e.printStackTrace();
+
         }
-        
+
     }
-    
-    private void checkTabeSelection()
-    {
-       if (jTablePackages.getSelectedColumn() > 0)
+
+    private void checkTabeSelection() {
+        if (jTablePackages.getSelectedColumn() > 0) {
             jButton2.setEnabled(true);
-       else
+        } else {
             jButton2.setEnabled(false);
+        }
     }
 
     /**
@@ -132,24 +118,22 @@ public class formPackages extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Uninstall selected programs
-        try
-        {
-            String[] args = {DataReciever.adbPath,  "-s", DataReciever.selectedDevice, "uninstall", ""};
+        try {
+
+            String[] args = {DataReciever.adbPath, "-s", DataReciever.selectedDevice, "uninstall", ""};
             int[] rows = jTablePackages.getSelectedRows();
-            for (int i = 0; i < rows.length; i++)
-            {
-                args[args.length - 1] = jTablePackages.getValueAt(rows[i], 1).toString();           
+            for (int i = 0; i < rows.length; i++) {
+                args[args.length - 1] = jTablePackages.getValueAt(rows[i], 1).toString();
                 String report = DataReciever.executeCommand(args);
-                if (report.indexOf("Success") == 0)
-                   ((BasicModel)jTablePackages.getModel()).removeRow(rows[i]);
-                    //jTablePackages.setModel(DataReciever.getPackages(), null);
-            } 
+                if (report.indexOf("Success") == 0) {
+                    ((BasicModel) jTablePackages.getModel()).removeRow(rows[i]);
+                }
+                //jTablePackages.setModel(DataReciever.getPackages(), null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch(Exception e)
-        {
-           e.printStackTrace();
-        }
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
