@@ -20,14 +20,14 @@ public class DataReciever {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
     private File saveLocation;
 
-    public static String adbPath = "/usr/local/bin/adb";
+    public static String adbPath = "adb";
 
     public DataReciever() {
         saveLocation = new File(Config.saveLocation());
 
         // if OS is Windows
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            adbPath += "\\adb.exe";
+            adbPath = System.getProperty("user.dir")+"\\adb\\adb.exe";
         }
 
         BufferedReader reader = null;
@@ -239,7 +239,6 @@ public class DataReciever {
                                 fo.setGroup(str);
                                 break;
                             case 3:
-                                // fuck
                                 if (str.indexOf(',') > 0) {
                                     devOutput = true;
                                     fo.size = str;
@@ -276,7 +275,7 @@ public class DataReciever {
                                     filename = str;
                                 } else {
                                     date += ' ' + str;
-                                }                               
+                                }
                                 break;
                             case 6:
                                 if (devOutput) {

@@ -7,9 +7,11 @@ import javax.swing.JOptionPane;
 public class Explorer {
 
     private String currentPath;
-    public static int DIRECTORY_ITEM_FILE = 0,
+    public static int 
+            DIRECTORY_ITEM_FILE = 0,
             DIRECTORY_ITEM_FOLDER = 1;
-    private static final int SHORTEST_PATH_LENGTH_WINDOWS = 3,
+    private static final int 
+            SHORTEST_PATH_LENGTH_WINDOWS = 3,
             SHORTEST_PATH_LENGTH_LINUX = 1;
     ModelPC dPrev;
     int shortestPathLength;
