@@ -38,6 +38,6 @@ public class Config {
     }
 
     public static String saveLocation() {
-        return saveLocation;
+        return File.separator+saveLocation;
     }
 }
