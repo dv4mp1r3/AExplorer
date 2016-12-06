@@ -29,6 +29,12 @@ public class DataReciever {
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             adbPath = System.getProperty("user.dir")+"\\adb\\adb.exe";
         }
+        
+        String customAdbPath = Config.adbPath();
+        if (customAdbPath.length() > 0)
+        {
+            adbPath = customAdbPath;
+        }
 
         BufferedReader reader = null;
         InputStream processIn = null;

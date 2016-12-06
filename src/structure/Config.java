@@ -15,7 +15,7 @@ public class Config {
     private static Wini iniFile;
 
     private static boolean startAsRoot = false, showHiddenFiles = true;
-    private static String saveLocation = null;
+    private static String saveLocation = null, adbPath = null;
 
     public static void init() throws IOException {
         iniFile = new Wini(new File(INI_FILENAME));
@@ -23,6 +23,7 @@ public class Config {
         showHiddenFiles = iniFile.get(SECTION_DEVICE, "showHiddenFiles", Boolean.class);
 
         saveLocation = iniFile.get(SECTION_OPTIONS, "saveLocation", String.class);
+        adbPath = iniFile.get(SECTION_OPTIONS, "adbPath", String.class);
 
         Logger lg = new Logger(new List());
 
@@ -39,5 +40,9 @@ public class Config {
 
     public static String saveLocation() {
         return File.separator+saveLocation;
+    }
+    
+    public static String adbPath() {
+        return adbPath;
     }
 }
