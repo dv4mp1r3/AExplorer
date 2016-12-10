@@ -282,7 +282,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
         } catch (IOException e) {
             e.printStackTrace();
-            // Something problem with settings.ini or other file
+            // Попадаем сюда только если что-то не так с settings.ini
         } catch (Exception e) {
             e.printStackTrace();
             //System.exit(1);
@@ -646,8 +646,8 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTablePC;
-    private javax.swing.JTable jTableSP;
+    private CustomTable jTablePC;
+    private CustomTable jTableSP;
     private javax.swing.JTextArea jTextAreaLog;
     private javax.swing.JTextField jTextFieldPC;
     private javax.swing.JTextField jTextFieldSP;
