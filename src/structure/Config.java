@@ -25,7 +25,7 @@ public class Config {
         saveLocation = iniFile.get(SECTION_OPTIONS, "saveLocation", String.class);
         adbPath = iniFile.get(SECTION_OPTIONS, "adbPath", String.class);
 
-        Logger lg = new Logger(new List());
+        Logger lg = new Logger();
 
         IconController.initIcons();
     }

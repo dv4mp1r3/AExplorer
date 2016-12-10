@@ -12,8 +12,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -22,6 +20,7 @@ import structure.Config;
 import structure.Explorer;
 import structure.IconController;
 import structure.ModelSPFolders;
+import adb.Logger;
 
 /**
  *
@@ -40,7 +39,8 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
      */
     public formExplorer() {
         initComponents();
-
+        
+        Logger.setLogControl(jTextAreaLog);
     }
 
     /**
@@ -170,8 +170,11 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             }
         });
 
+        jTextAreaLog.setEditable(false);
         jTextAreaLog.setColumns(20);
+        jTextAreaLog.setLineWrap(true);
         jTextAreaLog.setRows(5);
+        jTextAreaLog.setToolTipText("");
         jScrollPane2.setViewportView(jTextAreaLog);
 
         jMenu1.setText("Actions");
@@ -306,7 +309,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             try {
                 mouseClickCount = 0;
                 int selectedRow = jTablePC.getSelectedRow();
-                int selectedCol = jTablePC.getSelectedColumn();
+                //int selectedCol = jTablePC.getSelectedColumn();
                 String file = (String) jTablePC.getValueAt(selectedRow, 1);
                 if (file.equals("..")) {
                     jTablePC.setModel(exp.getUpperDirectory(), null);
@@ -335,7 +338,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
             try {
                 int selectedRow = jTableSP.getSelectedRow();
-                int selectedCol = jTableSP.getSelectedColumn();
+                //int selectedCol = jTableSP.getSelectedColumn();
                 String file = (String) jTableSP.getValueAt(selectedRow, 1);
                 int i = 0;
 
@@ -427,7 +430,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     try {
                         jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
                     } catch (Exception ex) {
-                        Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.writeToLog(ex.getMessage());
                     }
                 }
             });
@@ -545,7 +548,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     try {
                         jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
                     } catch (Exception ex) {
-                        Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.writeToLog(ex.getMessage());
                     }
                 }
             });
@@ -588,9 +591,9 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 try {
                     new formPackages(DataReciever.getPackages()).setVisible(true);
                 } catch (IOException ex) {
-                    Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.writeToLog(ex.getMessage());
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.writeToLog(ex.getMessage());
                 }
             }
         });

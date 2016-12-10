@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JTextArea;
 import structure.Config;
 import structure.ModelPackage;
 import structure.ModelSPFolders;
@@ -24,16 +25,18 @@ public class DataReciever {
 
     public DataReciever() {
         saveLocation = new File(Config.saveLocation());
-
         // if OS is Windows
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             adbPath = System.getProperty("user.dir")+"\\adb\\adb.exe";
         }
-        
-        String customAdbPath = Config.adbPath();
-        if (customAdbPath.length() > 0)
+        else // nix-based system
         {
-            adbPath = customAdbPath;
+            String customAdbPath = Config.adbPath();
+            // custom adb path is defined in settings.ini
+            if (customAdbPath.length() > 0)
+            {
+                adbPath = customAdbPath;
+            }
         }
 
         BufferedReader reader = null;
