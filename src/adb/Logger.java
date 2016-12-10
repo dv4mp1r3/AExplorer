@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import javax.swing.JTextArea;
 
 public class Logger {
 
@@ -15,10 +16,11 @@ public class Logger {
     private static BufferedWriter writer;
     private static final SimpleDateFormat sdf
             = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
+    
+    private static JTextArea logWindow = null;
 
     @SuppressWarnings("static-access")
-    public Logger(List logList) {
-        this.logList = logList;
+    public Logger() {
         try {
 
             Calendar now = Calendar.getInstance();
@@ -38,9 +40,14 @@ public class Logger {
             return false;
         }
         try {
-            logList.add(msg);
-            logList.select(logList.getItemCount() - 1);
             writeLogfile(msg);
+            
+            if (logWindow != null)
+            {
+                logWindow.append(msg);
+                logWindow.append("\r\n");
+            }
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;
@@ -48,6 +55,11 @@ public class Logger {
             return true;
         }
 
+    }
+    
+    public static void setLogControl(JTextArea newLogWindow)
+    {
+        logWindow = newLogWindow;
     }
 
     private static void writeLogfile(String msg) {
