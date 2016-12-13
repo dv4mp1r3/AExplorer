@@ -1,5 +1,6 @@
 package structure;
 
+import adb.Logger;
 import java.io.File;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -122,6 +123,7 @@ public class Explorer {
             return filename.substring(0, i);
         } catch (IndexOutOfBoundsException ex) {
             ex.printStackTrace();
+            Logger.writeToLog(ex);
             return filename;
         }
 
@@ -135,6 +137,7 @@ public class Explorer {
             }
         } catch (IndexOutOfBoundsException ex) {
             ex.printStackTrace();
+            Logger.writeToLog(ex);
         }
 
         return "";

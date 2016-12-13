@@ -16,7 +16,7 @@ public class formPackages extends javax.swing.JFrame {
         try {
             jTablePackages.setModel(mp, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            adb.Logger.writeToLog(e);
 
         }
 
@@ -131,7 +131,7 @@ public class formPackages extends javax.swing.JFrame {
                 //jTablePackages.setModel(DataReciever.getPackages(), null);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            adb.Logger.writeToLog(e);
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed

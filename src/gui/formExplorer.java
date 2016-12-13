@@ -284,10 +284,10 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             jTablePC.setModel(exp.setPath(), null);
             jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.writeToLog(e);
             // Попадаем сюда только если что-то не так с settings.ini
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.writeToLog(e);
             //System.exit(1);
         }
     }//GEN-LAST:event_formWindowOpened
@@ -299,7 +299,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             jTablePC.setModel(exp.setPath(), null);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.writeToLog(ex);
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -319,7 +319,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     jTextFieldPC.setText(exp.getPath());
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.writeToLog(ex);
             }
 
         } else if (evt.getButton() == MouseEvent.BUTTON3) {
@@ -364,12 +364,14 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
                     } catch (NumberFormatException ex) {
                         resultPath = file;
+                        Logger.writeToLog(ex);
                     }
                 } else // unner directory
                 {
                     try {
                         Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
                     } catch (NumberFormatException ex) {
+                        Logger.writeToLog(ex);
                         if (!jTextFieldSP.getText().equals("/")) {
                             resultPath = jTextFieldSP.getText() + "/" + (String) jTableSP.getValueAt(selectedRow, 1);
                         } else {
@@ -380,7 +382,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
                 model = adb.getDirContent(resultPath);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.writeToLog(ex);
             } finally {
                 // model = null - invalid results
                 if (model != null) {
@@ -401,7 +403,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             try {
                 jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.writeToLog(ex);
             }
         }
 
@@ -430,7 +432,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     try {
                         jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
                     } catch (Exception ex) {
-                        Logger.writeToLog(ex.getMessage());
+                        Logger.writeToLog(ex);
                     }
                 }
             });
@@ -446,8 +448,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     try {
                         jTablePC.setModel(exp.setPath(), null);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
-                        //Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.writeToLog(ex);
                     }
                 }
             });
@@ -482,6 +483,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 }
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
+                Logger.writeToLog(ex);
             }
 
             jPopupMenu1.add(miDelete);
@@ -500,6 +502,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             jTablePC.setModel(exp.setPath(), null);
         } catch (Exception e) {
             e.printStackTrace();
+            Logger.writeToLog(e);
         }
         // показать уведомление о том, что скриншот сохранен
     }//GEN-LAST:event_jMenuItem2ActionPerformed
@@ -533,6 +536,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         jTablePC.setModel(exp.setPath(), null);
                     } catch (Exception ex) {
                         ex.printStackTrace();
+                        Logger.writeToLog(ex);
                         //Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -548,7 +552,8 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     try {
                         jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
                     } catch (Exception ex) {
-                        Logger.writeToLog(ex.getMessage());
+                        Logger.writeToLog(ex);
+                        ex.printStackTrace();
                     }
                 }
             });
@@ -581,7 +586,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             String screnShotPath = adb.makeScreenshot();
             jTablePC.setModel(exp.setPath(), null);
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.writeToLog(e);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -591,9 +596,9 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 try {
                     new formPackages(DataReciever.getPackages()).setVisible(true);
                 } catch (IOException ex) {
-                    Logger.writeToLog(ex.getMessage());
+                   Logger.writeToLog(ex);
                 } catch (InterruptedException ex) {
-                    Logger.writeToLog(ex.getMessage());
+                   Logger.writeToLog(ex);
                 }
             }
         });

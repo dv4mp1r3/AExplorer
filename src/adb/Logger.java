@@ -5,6 +5,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.swing.JTextArea;
@@ -55,6 +59,21 @@ public class Logger {
             return true;
         }
 
+    }
+    
+    /**
+     * Логирование исключений
+     * @param ex
+     * @return 
+     */
+    public static boolean writeToLog(Exception ex)
+    {
+        ex.printStackTrace();
+        
+        StringWriter errors = new StringWriter();
+        ex.printStackTrace(new PrintWriter(errors));
+        return writeToLog(ex.getMessage()) &&
+                writeToLog(errors.toString());
     }
     
     public static void setLogControl(JTextArea newLogWindow)
