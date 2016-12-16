@@ -54,7 +54,7 @@ public class DataReciever {
             reader = new BufferedReader(new InputStreamReader(processIn));
             Logger.writeToLog(reader.readLine());
         } catch (IOException e) {
-            logAndStackTrace("Stream read fail", e);
+            Logger.writeToLog(e);
         } finally {
             try {
                 if (reader != null) {
@@ -64,7 +64,7 @@ public class DataReciever {
                     processIn.close();
                 }
             } catch (IOException e) {
-                logAndStackTrace("Can't to close streams", e);
+                Logger.writeToLog(e);
             }
         }
 
@@ -90,8 +90,7 @@ public class DataReciever {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            Logger.writeToLog(e.getMessage());
+            Logger.writeToLog(e);
         } finally {
             try {
                 if (br != null) {
@@ -101,7 +100,7 @@ public class DataReciever {
                     processIN.close();
                 }
             } catch (IOException e) {
-                logAndStackTrace(null, e);
+               Logger.writeToLog(e);
             }
 
         }
@@ -145,7 +144,7 @@ public class DataReciever {
                 new ProcessBuilder(adbPath, "connect", ip).start();
                 Logger.writeToLog(ip + LanguageStrings.getProperty("deviceConnectedLog"));
             } catch (IOException e) {
-                logAndStackTrace(null, e);
+                Logger.writeToLog(e);
             }
         }
     }
@@ -161,10 +160,10 @@ public class DataReciever {
             }
 
         } catch (IOException ex) {
-            logAndStackTrace(null, ex);
+            Logger.writeToLog(ex);
             return false;
         } catch (InterruptedException ex) {
-            logAndStackTrace(null, ex);
+            Logger.writeToLog(ex);
             return false;
         }
         return true;
@@ -262,6 +261,7 @@ public class DataReciever {
                                     fo.setSize(null);
                                     controlNumber = 5;
                                     date = str;
+                                    Logger.writeToLog(ex);
                                 }
                                 break;
                             case 4:
@@ -328,7 +328,7 @@ public class DataReciever {
             return mf;
 
         } catch (IOException e) {
-            logAndStackTrace(null, e);
+            Logger.writeToLog(e);
 
         } finally {
             try {
@@ -339,7 +339,7 @@ public class DataReciever {
                     processIN.close();
                 }
             } catch (IOException e) {
-                logAndStackTrace(null, e);
+                Logger.writeToLog(e);
             }
         }
         return null;
@@ -371,10 +371,12 @@ public class DataReciever {
 
             return new File(dPath + '\\' + splits[splits.length - 1]);
         } catch (IOException e) {
-            logAndStackTrace("PullFile: can't load file " + path, e);
+            Logger.writeToLog("PullFile: can't load file " + path);
+            Logger.writeToLog(e);
             return null;
         } catch (InterruptedException e) {
-            logAndStackTrace("PullFile: can't build process", e);
+            Logger.writeToLog("PullFile: can't build process");
+            Logger.writeToLog(e);
             return null;
         }
     }
@@ -385,9 +387,11 @@ public class DataReciever {
             process.waitFor();
             //Logger.writeToLog(source + LanguageStrings.getProperty("pushFailedLog") + destination);
         } catch (IOException e) {
-            logAndStackTrace("PushFile: can't load file " + source, e);
+            Logger.writeToLog("PushFile: can't load file " + source);
+            Logger.writeToLog(e);
         } catch (InterruptedException e) {
-            logAndStackTrace("PushFile: can't load file " + source, e);
+            Logger.writeToLog("PushFile: can't load file " + source);
+            Logger.writeToLog(e);
         }
     }
 
@@ -425,9 +429,10 @@ public class DataReciever {
                 }
             }
         } catch (IOException e) {
-            logAndStackTrace(path, e);
+            Logger.writeToLog(path);
+            Logger.writeToLog(e);
         } catch (InterruptedException e) {
-            logAndStackTrace(null, e);
+            Logger.writeToLog(e);
         } finally {
             try {
                 if (reader != null) {
@@ -437,7 +442,7 @@ public class DataReciever {
                     processIN.close();
                 }
             } catch (IOException e) {
-                logAndStackTrace(null, e);
+                Logger.writeToLog(e);
             }
         }
     }

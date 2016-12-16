@@ -40,11 +40,9 @@ public class formWatcher extends javax.swing.JFrame {
             reader.close();
             this.setTitle(filename);
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(formWatcher.class.getName()).log(Level.SEVERE, null, ex);
+            adb.Logger.writeToLog(ex);
         } catch (IOException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(formWatcher.class.getName()).log(Level.SEVERE, null, ex);
+            adb.Logger.writeToLog(ex);
         }
 
     }
@@ -60,8 +58,7 @@ public class formWatcher extends javax.swing.JFrame {
 
             return true;
         } catch (IOException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(formWatcher.class.getName()).log(Level.SEVERE, null, ex);
+            adb.Logger.writeToLog(ex);
         }
 
         return false;
