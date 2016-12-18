@@ -360,11 +360,13 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         return;
                     }
 
+                    // парсим Long из столбца чтобы проверить, файл или папка
+                    // для папки значение столбца null
                     try {
                         Long.parseLong((String) jTableSP.getValueAt(selectedRow, 5));
                     } catch (NumberFormatException ex) {
                         resultPath = file;
-                        Logger.writeToLog(ex);
+                        //Logger.writeToLog(ex);
                     }
                 } else // unner directory
                 {
