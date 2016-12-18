@@ -215,93 +215,7 @@ public class DataReciever {
                 }
 
                 lineCount++;
-                String[] split = line.split(" ");
-
-                int paramNum = 0, partOfFilename = 0, controlNumber = -1;
-                FileObj fo = new FileObj();
-                String filename = "", date = "";
-                boolean devOutput = false;
-
-                for (String str : split) {
-                    if (!str.equals(" ") && str.length() > 0) {
-                        if (devOutput && paramNum >= 7) {
-                            filename += str;
-                        }
-
-                        if (paramNum == controlNumber) {
-                            if (partOfFilename != 0) {
-                                filename += ' ';
-                            }
-                            filename += str;
-                            partOfFilename++;
-                            continue;
-                        }
-                        switch (paramNum) {
-                            case 0:
-                                fo.setRules(str);
-                                break;
-                            case 1:
-                                fo.setUser(str);
-                                break;
-                            case 2:
-                                fo.setGroup(str);
-                                break;
-                            case 3:
-                                if (str.indexOf(',') > 0) {
-                                    devOutput = true;
-                                    fo.size = str;
-                                    break;
-                                }
-                                try {
-                                    Long.parseLong(str);
-                                    fo.setSize(str);
-                                    controlNumber = 6;
-                                } catch (NumberFormatException ex) {
-                                    fo.setFileIsFile(false);
-                                    fo.setSize(null);
-                                    controlNumber = 5;
-                                    date = str;
-                                    Logger.writeToLog(ex);
-                                }
-                                break;
-                            case 4:
-                                if (devOutput) {
-                                    fo.size += str;
-                                    break;
-                                }
-                                if (!fo.isFile()) {
-                                    date += ' ' + str;
-                                } else {
-                                    date = str;
-                                }
-                                break;
-                            case 5: //date
-                                if (devOutput) {
-                                    date = str;
-                                    break;
-                                }
-                                if (!fo.isFile()) {
-                                    filename = str;
-                                } else {
-                                    date += ' ' + str;
-                                }
-                                break;
-                            case 6:
-                                if (devOutput) {
-                                    date += str;
-                                    break;
-                                }
-                                if (!fo.isFile()) {
-                                    filename = str;
-                                }
-                                break;
-                        }
-                        paramNum++;
-
-                    }
-                }
-                fo.setName(filename);
-                fo.setDate(date);
+                FileObj fo = new FileObj(line);               
                 ret.add(fo);
             }
             mf = new ModelSPFolders(ret.size());
@@ -348,7 +262,7 @@ public class DataReciever {
     public void setSelectedDevice(String newDevice) {
         DataReciever.selectedDevice = newDevice;
     }
-
+    
     public File pullFile(String path, String dPath) {
         try {
             String dest = saveLocation.getAbsolutePath();
