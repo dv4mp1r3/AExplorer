@@ -278,9 +278,10 @@ public class DataReciever {
 
                 path = interrimsPath + splits[splits.length - 1];
             }
-
+            Logger.writeToLog("Pulling file "+path+" -------> "+dPath);
             Process p = new ProcessBuilder(adbPath, "-s", selectedDevice, "pull", path, dPath).start();
             p.waitFor();
+            Logger.writeToLog("done");
             //Logger.writeToLog(path + LanguageStrings.getProperty("pullFromToLog") + dPath);
 
             return new File(dPath + '\\' + splits[splits.length - 1]);
@@ -297,8 +298,10 @@ public class DataReciever {
 
     public void pushFile(String source, String destination) {
         try {
+            Logger.writeToLog("Pushing file "+source+" -------> "+destination);
             Process process = new ProcessBuilder(adbPath, "-s", selectedDevice, "push", source, destination).start();
             process.waitFor();
+            Logger.writeToLog("done");
             //Logger.writeToLog(source + LanguageStrings.getProperty("pushFailedLog") + destination);
         } catch (IOException e) {
             Logger.writeToLog("PushFile: can't load file " + source);
