@@ -418,12 +418,4 @@ public class DataReciever {
         return mp;
     }
 
-    private static void logAndStackTrace(String customMsg, Exception ex) {
-        if (customMsg != null) {
-            Logger.writeToLog(customMsg);
-        }
-
-        Logger.writeToLog(ex.getMessage());
-        ex.printStackTrace();
-    }
 }
