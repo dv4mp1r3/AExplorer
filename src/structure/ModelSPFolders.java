@@ -26,7 +26,9 @@ public class ModelSPFolders extends BasicModel {
     public boolean isCellEditable(int row, int col) {
         cellOldCol = col;
         cellOldRow = row;
-        cellOldValue = this.getValueAt(row, col).toString();
+        Object val = this.getValueAt(row, col);       
+        cellOldValue = val != null ? val.toString() : null;
+
         return col == 1 && this.getValueAt(row, 5) != null;
     }
 

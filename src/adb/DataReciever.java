@@ -278,9 +278,10 @@ public class DataReciever {
 
                 path = interrimsPath + splits[splits.length - 1];
             }
-
+            Logger.writeToLog("Pulling file "+path+" -------> "+dPath);
             Process p = new ProcessBuilder(adbPath, "-s", selectedDevice, "pull", path, dPath).start();
             p.waitFor();
+            Logger.writeToLog("done");
             //Logger.writeToLog(path + LanguageStrings.getProperty("pullFromToLog") + dPath);
 
             return new File(dPath + '\\' + splits[splits.length - 1]);
@@ -297,8 +298,10 @@ public class DataReciever {
 
     public void pushFile(String source, String destination) {
         try {
+            Logger.writeToLog("Pushing file "+source+" -------> "+destination);
             Process process = new ProcessBuilder(adbPath, "-s", selectedDevice, "push", source, destination).start();
             process.waitFor();
+            Logger.writeToLog("done");
             //Logger.writeToLog(source + LanguageStrings.getProperty("pushFailedLog") + destination);
         } catch (IOException e) {
             Logger.writeToLog("PushFile: can't load file " + source);
@@ -389,7 +392,11 @@ public class DataReciever {
         Date dt = new Date();
         String resultPath = "/sdcard/screen.png";
         String[] cmd1 = {adbPath, "shell", "screencap", "-p", resultPath};
-        executeCommand(cmd1);
+        String screenCapResult = executeCommand(cmd1);
+        if (screenCapResult.indexOf("not found") > 0)
+        {
+            throw new InterruptedException("Screencap not found on android device");
+        }
         String dest = dt.toString().replaceAll(" ", "_") + ".png";
         dest = dest.replaceAll(":", "-");
         pullFile(resultPath, dest);
@@ -415,12 +422,4 @@ public class DataReciever {
         return mp;
     }
 
-    private static void logAndStackTrace(String customMsg, Exception ex) {
-        if (customMsg != null) {
-            Logger.writeToLog(customMsg);
-        }
-
-        Logger.writeToLog(ex.getMessage());
-        ex.printStackTrace();
-    }
 }
