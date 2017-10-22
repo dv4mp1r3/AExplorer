@@ -399,7 +399,11 @@ public class DataReciever {
         Date dt = new Date();
         String resultPath = "/sdcard/screen.png";
         String[] cmd1 = {adbPath, "shell", "screencap", "-p", resultPath};
-        executeCommand(cmd1);
+        String screenCapResult = executeCommand(cmd1);
+        if (screenCapResult.indexOf("not found") > 0)
+        {
+            throw new InterruptedException("Screencap not found on android device");
+        }
         String dest = dt.toString().replaceAll(" ", "_") + ".png";
         dest = dest.replaceAll(":", "-");
         pullFile(resultPath, dest);
@@ -425,12 +429,4 @@ public class DataReciever {
         return mp;
     }
 
-    private static void logAndStackTrace(String customMsg, Exception ex) {
-        if (customMsg != null) {
-            Logger.writeToLog(customMsg);
-        }
-
-        Logger.writeToLog(ex.getMessage());
-        ex.printStackTrace();
-    }
 }
