@@ -5,91 +5,69 @@ import java.util.ArrayList;
 public class FileObj {
 
     public String date, rules, group, user, name, size;
-    private boolean file = true;
+    private boolean isFile = true;
+    private boolean isSymlink = false;
 
     public FileObj() {}
     
-    public FileObj(String line)
+    public FileObj(String line) throws Exception
     {
         ArrayList<String> split = formatLine(line);
-        int paramNum = 0, partOfFilename = 0, controlNumber = -1;
+        if (split.size() == 2)
+        {
+            throw new Exception("wrong string");
+        }
+        int paramNum = 0;
+
         String filename = "", date = "";
-        boolean devOutput = false;
         
         for (String str : split) {
-            if (devOutput && paramNum >= 7) {
-                filename += str;
-            }
-
-            if (paramNum == controlNumber) {
-                if (partOfFilename != 0) {
-                    filename += ' ';
+           
+            if (paramNum >= 7)
+            {
+                // каталог
+                if (str.endsWith("/"))
+                {
+                    filename += str.replace("/", "");
+                    this.isFile = false;
                 }
-                filename += str;
-                partOfFilename++;
+                // ссылка
+                else if (str.endsWith("@"))
+                {
+                    filename += str.replace("@", "");
+                    this.isFile = false;
+                }
+                // разделитель 
+                else if (str.equals("->") || this.isSymlink)
+                {
+                    this.isFile = false;
+                    this.isSymlink = true;
+                    filename += " " + str + " ";
+                }
+                else
+                {
+                    filename += str;
+                }
+                
                 continue;
             }
+            
             switch (paramNum) {
                 case 0:
                     this.setRules(str);
                     break;
-                case 1:
+                case 2:
                     this.setUser(str);
                     break;
-                case 2:
+                case 3:
                     this.setGroup(str);
                     break;
-                case 3:
-                    if (str.indexOf(',') > 0) {
-                        devOutput = true;
-                        this.size = str;
-                        break;
-                    }
-                    // если не удалось спарсить число из параметра
-                    // значит устанавливаем параметр как дату
-                    // и перед нами файл (размер идет раньше даты)
-                    try {
-                        Long.parseLong(str);
-                        this.setSize(str);
-                        controlNumber = 6;
-                    } catch (NumberFormatException ex) {
-                        this.setFileIsFile(false);
-                        this.setSize(null);
-                        controlNumber = 5;
-                        date = str;
-                        //Logger.writeToLog(ex);
-                    }
-                    break;
                 case 4:
-                    if (devOutput) {
-                        this.size += str;
-                        break;
-                    }
-                    if (!this.isFile()) {
-                        date += ' ' + str;
-                    } else {
-                        date = str;
-                    }
+                    this.setSize(str);
                     break;
-                case 5: //date
-                    if (devOutput) {
-                        date = str;
-                        break;
-                    }
-                    if (!this.isFile()) {
-                        filename = str;
-                    } else {
+                case 5:
+                case 6: 
                         date += ' ' + str;
-                    }
-                    break;
-                case 6:
-                    if (devOutput) {
-                        date += str;
-                        break;
-                    }
-                    if (!this.isFile()) {
-                        filename = str;
-                    }
                     break;
             }
             paramNum++;
@@ -138,11 +116,11 @@ public class FileObj {
     }
 
     public void setFileIsFile(boolean f) {
-        file = f;
+        isFile = f;
     }
 
     public boolean isFile() {
-        return file;
+        return isFile;
     }
 
 }

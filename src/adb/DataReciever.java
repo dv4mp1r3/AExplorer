@@ -181,7 +181,7 @@ public class DataReciever {
         BufferedReader br = null;
         InputStream processIN = null;
         try {
-            String cmd = "ls -l '" + dir + '\'';
+            String cmd = "ls -lF '" + dir + '\'';
             //List<String> ls = Arrays.asList(adbPath,"-s", selectedDevice, "shell", "ls", "-l", dir);
 
             process = new ProcessBuilder(adbPath, "-s", selectedDevice, "shell", cmd).start();
@@ -215,8 +215,15 @@ public class DataReciever {
                 }
 
                 lineCount++;
-                FileObj fo = new FileObj(line);               
-                ret.add(fo);
+                try
+                {
+                    FileObj fo = new FileObj(line); 
+                    ret.add(fo);
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }                                  
             }
             mf = new ModelSPFolders(ret.size());
             for (FileObj fo : ret) {
