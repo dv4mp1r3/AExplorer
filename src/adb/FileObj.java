@@ -23,6 +23,7 @@ public class FileObj {
         
         for (String str : split) {
            
+            // обработка имени файла
             if (paramNum >= 7)
             {
                 // каталог
@@ -48,7 +49,7 @@ public class FileObj {
                 {
                     filename += str;
                 }
-                
+                paramNum++;
                 continue;
             }
             
