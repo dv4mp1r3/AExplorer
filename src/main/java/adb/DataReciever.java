@@ -46,7 +46,7 @@ public class DataReciever {
             // Например, когда выводится сообщение об ошибке перезапуска с правами рута
             // В таких случаях надо грохнуть процесс и сделать рестарт adb           
             if (Config.startAsRoot()) {
-                new ProcessBuilder(adbPath, "root").start();
+                new ProcessBuilder(adbPath, "shell \"su\"").start();
             }
 
             Process process = new ProcessBuilder(adbPath, "version").start();
@@ -181,9 +181,12 @@ public class DataReciever {
         BufferedReader br = null;
         InputStream processIN = null;
         try {
-            String cmd = "ls -lF '" + dir + '\'';
+            String cmd = "ls -lF " + dir;
             //List<String> ls = Arrays.asList(adbPath,"-s", selectedDevice, "shell", "ls", "-l", dir);
-
+            if (Config.startAsRoot())
+            {
+                cmd = "su -c \"" + cmd + "\"";
+            }
             process = new ProcessBuilder(adbPath, "-s", selectedDevice, "shell", cmd).start();
 
             processIN = process.getInputStream();

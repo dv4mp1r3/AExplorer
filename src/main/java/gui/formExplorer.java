@@ -380,7 +380,10 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         }
                     }
                 }
-
+                if (!resultPath.endsWith("/"))
+                {
+                    resultPath += "/";
+                }
                 model = adb.getDirContent(resultPath);
             } catch (Exception ex) {
                 Logger.writeToLog(ex);
