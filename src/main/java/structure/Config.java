@@ -3,8 +3,8 @@ package structure;
 import adb.Logger;
 import java.io.File;
 import java.io.IOException;
-import java.awt.List;
 import org.ini4j.Wini;
+import gui.formExplorer;
 
 public class Config {
 
@@ -17,7 +17,7 @@ public class Config {
     private static boolean startAsRoot = false, showHiddenFiles = true;
     private static String saveLocation = null, adbPath = null;
 
-    public static void init() throws IOException {
+    public static void init(formExplorer fe) throws IOException {
         iniFile = new Wini(new File(INI_FILENAME));
         startAsRoot = iniFile.get(SECTION_DEVICE, "startAsRoot", Boolean.class);
         showHiddenFiles = iniFile.get(SECTION_DEVICE, "showHiddenFiles", Boolean.class);
@@ -27,7 +27,7 @@ public class Config {
 
         Logger lg = new Logger();
 
-        IconController.initIcons();
+        IconController.initIcons(fe);
     }
 
     public static boolean showHiddenFiles() {

@@ -11,7 +11,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.JMenuItem;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -81,6 +83,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 formWindowOpened(evt);
             }
         });
+
         jButton1.setIcon(new javax.swing.ImageIcon(this.getClass().getResource("/gfx/arrow_refresh.png"))); // NOI18N
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -253,7 +256,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            Config.init();
+            Config.init(this);
 
             adb = new DataReciever();
 
@@ -440,16 +443,20 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     }
                 }
             });
-
             miTransfer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    for (int i = 0; i < selRows.length; i++) {
-                        String Spath = jTextFieldSP.getText() + "/" + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
-                        String DPath = jTextFieldPC.getText() + File.separator + jTableSP.getValueAt(selRows[i], 1) + jTableSP.getValueAt(selRows[i], 2);
-                        adb.pullFile(Spath, DPath);
-                    }
-
                     try {
+                        for (int i = 0; i < selRows.length; i++) {
+                            String Spath = jTextFieldSP.getText()
+                                    + "/"
+                                    + jTableSP.getValueAt(selRows[i], 1)
+                                    + jTableSP.getValueAt(selRows[i], 2);
+                            String DPath = jTextFieldPC.getText()
+                                    + File.separator
+                                    + jTableSP.getValueAt(selRows[i], 1)
+                                    + jTableSP.getValueAt(selRows[i], 2);
+                            adb.pullFile(Spath, DPath);
+                        }
                         jTablePC.setModel(exp.setPath(), null);
                     } catch (Exception ex) {
                         Logger.writeToLog(ex);

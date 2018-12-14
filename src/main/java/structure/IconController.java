@@ -2,6 +2,7 @@ package structure;
 
 import java.io.File;
 import javax.swing.ImageIcon;
+import gui.formExplorer;
 
 public class IconController {
 
@@ -9,7 +10,7 @@ public class IconController {
             icWord, icExcel, icScript, icBash, icUntyped;
     public static ImageIcon mDelete, mView, mRename, mTransferPC, mTransferSP;
 
-    private static String iconDirectory = "src"+File.separator+ "gfx" +File.separator;
+    //private static String fe.getClass().getResource( = "src"+File.separator+ "gfx" +File.separator;
 
     private static String[] fileMusic = {".mp3", ".wav", ".wave", ".flac", ".aac", ".ogg", ".mid"},
             fileVideo = {".mkv", ".avi", ".wmv", ".flv", ".mp4"},
@@ -23,25 +24,25 @@ public class IconController {
             ARRAY_TYPE_SCRIPT = 3,
             ARRAY_TYPE_ARCHIVE = 4;
 
-    public static void initIcons() {
-        mDelete = new ImageIcon(iconDirectory + "delete.png");
-        mView = new ImageIcon(iconDirectory + "page_go.png");
-        mRename = new ImageIcon(iconDirectory + "page_edit.png");
-        icFolder = new ImageIcon(iconDirectory + "folder.png");
-        icText = new ImageIcon(iconDirectory + "text.png");
-        icArchive = new ImageIcon(iconDirectory + "zip.png");
-        icVideo = new ImageIcon(iconDirectory + "film.png");
-        icPicture = new ImageIcon(iconDirectory + "picture.png");
-        icImage = new ImageIcon(iconDirectory + "cd.png");
-        icAudio = new ImageIcon(iconDirectory + "music.png");
-        icPdf = new ImageIcon(iconDirectory + "page_white_acrobat.png");
-        icWord = new ImageIcon(iconDirectory + "page_white_word.png");
-        icExcel = new ImageIcon(iconDirectory + "page_white_excel.png");
-        icScript = new ImageIcon(iconDirectory + "page_white_code.png");
-        icBash = new ImageIcon(iconDirectory + "page_white_tux.png");
-        icUntyped = new ImageIcon(iconDirectory + "page_white.png");
-        mTransferPC = new ImageIcon(iconDirectory + "arrow_right.png");
-        mTransferSP = new ImageIcon(iconDirectory + "arrow_left.png");
+    public static void initIcons(formExplorer fe) {
+        mDelete = new ImageIcon(fe.getClass().getResource( "/gfx/delete.png"));
+        mView = new ImageIcon(fe.getClass().getResource( "/gfx/page_go.png"));
+        mRename = new ImageIcon(fe.getClass().getResource( "/gfx/page_edit.png"));
+        icFolder = new ImageIcon(fe.getClass().getResource( "/gfx/folder.png"));
+        icText = new ImageIcon(fe.getClass().getResource( "/gfx/text.png"));
+        icArchive = new ImageIcon(fe.getClass().getResource( "/gfx/zip.png"));
+        icVideo = new ImageIcon(fe.getClass().getResource( "/gfx/film.png"));
+        icPicture = new ImageIcon(fe.getClass().getResource( "/gfx/picture.png"));
+        icImage = new ImageIcon(fe.getClass().getResource( "/gfx/cd.png"));
+        icAudio = new ImageIcon(fe.getClass().getResource( "/gfx/music.png"));
+        icPdf = new ImageIcon(fe.getClass().getResource( "/gfx/page_white_acrobat.png"));
+        icWord = new ImageIcon(fe.getClass().getResource( "/gfx/page_white_word.png"));
+        icExcel = new ImageIcon(fe.getClass().getResource("/gfx/page_white_excel.png"));
+        icScript = new ImageIcon(fe.getClass().getResource( "/gfx/page_white_code.png"));
+        icBash = new ImageIcon(fe.getClass().getResource( "/gfx/page_white_tux.png"));
+        icUntyped = new ImageIcon(fe.getClass().getResource( "/gfx/page_white.png"));
+        mTransferPC = new ImageIcon(fe.getClass().getResource( "/gfx/arrow_right.png"));
+        mTransferSP = new ImageIcon(fe.getClass().getResource( "/gfx/arrow_left.png"));
         //icResource = new ImageIcon("icResource.png");
     }
 

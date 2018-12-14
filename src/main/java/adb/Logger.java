@@ -44,13 +44,13 @@ public class Logger {
             return false;
         }
         try {
-            writeLogfile(msg);
+            /*writeLogfile(msg);
             
             if (logWindow != null)
             {
                 logWindow.append(msg);
                 logWindow.append("\r\n");
-            }
+            }*/
             
         } catch (Exception ex) {
             ex.printStackTrace();
