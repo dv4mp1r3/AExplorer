@@ -1,6 +1,5 @@
 package gui;
 
-import adb.DataReciever;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,9 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
+import adb.DataReciever;
 
 public class formWatcher extends javax.swing.JFrame {
 
@@ -19,9 +17,11 @@ public class formWatcher extends javax.swing.JFrame {
      */
     private final String filename, destanation;
     private final boolean deleteFileOnCloseForm;
+    formExplorer explorer;
 
-    public formWatcher(String Spath, String Dpath, boolean fromSmartPhone) {
+    public formWatcher(formExplorer explorer, String Spath, String Dpath, boolean fromSmartPhone) {
         initComponents();
+        this.explorer = explorer;
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         filename = Spath;
         destanation = Dpath;
@@ -147,15 +147,16 @@ public class formWatcher extends javax.swing.JFrame {
         // Save file on PC
         boolean rewriteResult = rewriteFile();
         // if need to send it to smartphone
-        if (destanation != null) {
+        //todo: переписать
+        /*if (destanation != null) {
             if (rewriteResult) {
-                DataReciever adb = new DataReciever();
+                DataReciever adb = new DataReciever(explorer);
                 String device = adb.getDevices(false).get(0);
                 adb.setSelectedDevice(device);
                 adb.deleteFile(destanation);
                 adb.pushFile(filename, destanation);
             }
-        }
+        }*/
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

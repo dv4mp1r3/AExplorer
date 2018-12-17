@@ -33,12 +33,8 @@ public class ActionGetDirContent extends DataReceiverAction {
         BufferedReader br = null;
         InputStream processIN = null;
         String cmd = "ls -lF " + dir;
-        if (Config.startAsRoot())
-        {
-            cmd = "su -c \"" + cmd + "\"";
-        }
 
-        args = new String[]{adbPath, "-s", selectedDevice, "shell", cmd};
+        initCommand(cmd);
     }
 
     private static String getFileExtension(String filename) {
@@ -59,7 +55,10 @@ public class ActionGetDirContent extends DataReceiverAction {
 
     @Override
     protected void afterAction() {
-
+       synchronized (form)
+       {
+            form.updateTableModelSP((ModelSPFolders) result);
+       }
     }
 
     @Override
@@ -110,7 +109,10 @@ public class ActionGetDirContent extends DataReceiverAction {
                 }
                 catch (Exception ex)
                 {
-                    ex.printStackTrace();
+                    if (!ex.getMessage().equals("wrong string"))
+                    {
+                        ex.printStackTrace();
+                    }
                 }
             }
             mf = new ModelSPFolders(ret.size());
@@ -132,7 +134,8 @@ public class ActionGetDirContent extends DataReceiverAction {
                 }
 
             }
-            return mf;
+            this.result = mf;
+            return result;
         } catch (IOException e) {
             Logger.writeToLog(e);
 

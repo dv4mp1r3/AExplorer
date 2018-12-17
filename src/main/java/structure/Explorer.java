@@ -115,14 +115,15 @@ public class Explorer {
     }
 
     private static String getFileName(String filename) {
+        int i = filename.lastIndexOf('.');
         try {
-            int i = filename.lastIndexOf('.');
-            if (i == 0) {
+            if (i <= 0) {
                 return filename;
             }
             return filename.substring(0, i);
         } catch (IndexOutOfBoundsException ex) {
             ex.printStackTrace();
+            Logger.writeToLog("IndexOutOfBoundsException ("+filename+")");
             Logger.writeToLog(ex);
             return filename;
         }

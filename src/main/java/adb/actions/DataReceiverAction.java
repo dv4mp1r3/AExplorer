@@ -1,6 +1,7 @@
 package adb.actions;
 
 import gui.formExplorer;
+import structure.Config;
 
 public abstract class DataReceiverAction extends AbstractAction {
 
@@ -27,4 +28,25 @@ public abstract class DataReceiverAction extends AbstractAction {
         this.form = form;
     }
 
+    public DataReceiverAction initFromAction(DataReceiverAction action)
+    {
+        selectedDevice = action.selectedDevice;
+        form = action.form;
+        adbPath = action.adbPath;
+
+        return this;
+    }
+
+    public void initCommand(String command)
+    {
+        if (Config.startAsRoot())
+        {
+            command = "su -c \"" + command + "\"";
+            args = new String[]{adbPath, "-s", selectedDevice, "shell", command};
+        }
+        else
+        {
+            args = new String[]{adbPath, "-s", selectedDevice, "shell", command};
+        }
+    }
 }

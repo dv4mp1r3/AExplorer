@@ -1,8 +1,9 @@
 package gui;
 
-import adb.DataReciever;
+import adb.proccess.ProcessHelper;
 import structure.BasicModel;
 import structure.ModelPackage;
+import adb.DataReciever;
 
 public class formPackages extends javax.swing.JFrame {
 
@@ -124,11 +125,10 @@ public class formPackages extends javax.swing.JFrame {
             int[] rows = jTablePackages.getSelectedRows();
             for (int i = 0; i < rows.length; i++) {
                 args[args.length - 1] = jTablePackages.getValueAt(rows[i], 1).toString();
-                String report = DataReciever.executeCommand(args);
+                String report = ProcessHelper.executeCommand(args);
                 if (report.indexOf("Success") == 0) {
                     ((BasicModel) jTablePackages.getModel()).removeRow(rows[i]);
                 }
-                //jTablePackages.setModel(DataReciever.getPackages(), null);
             }
         } catch (Exception e) {
             adb.Logger.writeToLog(e);

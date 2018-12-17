@@ -11,8 +11,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -258,7 +256,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
         try {
             Config.init(this);
 
-            adb = new DataReciever();
+            adb = new DataReciever(this);
 
             ArrayList<String> arrDevices = adb.getDevices(false);
             if (arrDevices.size() == 0) {
@@ -284,7 +282,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             jTextPaneDevice.setText(tmpDeviceName);
 
             jTablePC.setModel(exp.setPath(), null);
-            jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
+            adb.getDirContent(jTextFieldSP.getText());
         } catch (IOException e) {
             Logger.writeToLog(e);
             // Попадаем сюда только если что-то не так с settings.ini
@@ -383,19 +381,10 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         }
                     }
                 }
-                if (!resultPath.endsWith("/"))
-                {
-                    resultPath += "/";
-                }
-                model = adb.getDirContent(resultPath);
+                adb.getDirContent(resultPath);
+                jTextFieldSP.setText(resultPath);
             } catch (Exception ex) {
                 Logger.writeToLog(ex);
-            } finally {
-                // model = null - invalid results
-                if (model != null) {
-                    jTableSP.setModel(model, this);
-                    jTextFieldSP.setText(resultPath);
-                }
             }
         }
 
@@ -407,11 +396,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            try {
-                jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), this);
-            } catch (Exception ex) {
-                Logger.writeToLog(ex);
-            }
+            adb.getDirContent(jTextFieldSP.getText());
         }
 
     }//GEN-LAST:event_jButton1MouseClicked
@@ -430,16 +415,11 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                 public void actionPerformed(ActionEvent e) {
                     for (int i = 0; i < selRows.length; i++) {
                         String ext = (String) jTableSP.getValueAt(selRows[i], 2);
-                        String path = jTextFieldSP.getText() + File.separator + jTableSP.getValueAt(selRows[i], 1);
+                        String path = jTextFieldSP.getText() + "/" + jTableSP.getValueAt(selRows[i], 1);
                         if (ext != null) {
                             path += ext;
                         }
-                        adb.deleteFile(path);
-                    }
-                    try {
-                        jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
-                    } catch (Exception ex) {
-                        Logger.writeToLog(ex);
+                        adb.deleteFile(jTextFieldSP.getText(), path);
                     }
                 }
             });
@@ -467,6 +447,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
             try {
                 final int i = jTableSP.getSelectedRow();
                 Object tmp = jTableSP.getValueAt(i, 5);
+                formExplorer exp = this;
                 if (selRows.length == 1 && (tmp != null && tmp.toString().length() > 0)) {
                     miView.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
@@ -476,7 +457,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
                             java.awt.EventQueue.invokeLater(new Runnable() {
                                 public void run() {
-                                    new formWatcher(DPath, Spath, true).setVisible(true);
+                                    new formWatcher(exp, DPath, Spath, true).setVisible(true);
                                 }
                             });
                         }
@@ -509,8 +490,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         try {
-            String screnShotPath = adb.makeScreenshot();
-            jTablePC.setModel(exp.setPath(), null);
+            adb.makeScreenshot(jTextFieldSP.getText());
         } catch (Exception e) {
             e.printStackTrace();
             Logger.writeToLog(e);
@@ -548,7 +528,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         Logger.writeToLog(ex);
-                        //Logger.getLogger(formExplorer.class.getName()).log(Level.SEVERE, null, ex);
+                        //Logger.getLogger(formExplorer.class.getName()).strLog(Level.SEVERE, null, ex);
                     }
                 }
             });
@@ -560,23 +540,19 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         String pPath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(selRows[i], 1) + jTablePC.getValueAt(selRows[i], 2);
                         adb.pushFile(pPath, Spath);
                     }
-                    try {
-                        jTableSP.setModel(adb.getDirContent(jTextFieldSP.getText()), obj);
-                    } catch (Exception ex) {
-                        Logger.writeToLog(ex);
-                        ex.printStackTrace();
-                    }
+                    adb.getDirContent(jTextFieldSP.getText());
                 }
             });
 
             if (selRows.length == 1 && jTablePC.getValueAt(jTablePC.getSelectedRow(), 3) != null) {
+                formExplorer exp = this;
                 miView.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         int i = jTablePC.getSelectedRow();
                         final String Spath = jTextFieldPC.getText() + File.separator + jTablePC.getValueAt(i, 1) + jTablePC.getValueAt(i, 2);
                         java.awt.EventQueue.invokeLater(new Runnable() {
                             public void run() {
-                                new formWatcher(Spath, null, false).setVisible(true);
+                                new formWatcher(exp, Spath, null, false).setVisible(true);
                             }
                         });
                     }
@@ -594,8 +570,7 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            String screnShotPath = adb.makeScreenshot();
-            jTablePC.setModel(exp.setPath(), null);
+            adb.makeScreenshot(jTextFieldSP.getText());
         } catch (Exception e) {
             Logger.writeToLog(e);
         }
@@ -611,55 +586,9 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
     
     private void showPackages()
     {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new formPackages(DataReciever.getPackages()).setVisible(true);
-                } catch (IOException ex) {
-                   Logger.writeToLog(ex);
-                } catch (InterruptedException ex) {
-                   Logger.writeToLog(ex);
-                }
-            }
-        });
+        adb.getPackages();
     }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
- /*try {
-         for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-         if ("Nimbus".equals(info.getName())) {
-         javax.swing.UIManager.setLookAndFeel(info.getClassName());
-         break;
-         }
-         }
-         } catch (ClassNotFoundException ex) {
-         java.util.logging.Logger.getLogger(formExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-         } catch (InstantiationException ex) {
-         java.util.logging.Logger.getLogger(formExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-         } catch (IllegalAccessException ex) {
-         java.util.logging.Logger.getLogger(formExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-         java.util.logging.Logger.getLogger(formExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-         }
-         */
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                formExplorer a = new formExplorer();
-                a.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -703,13 +632,32 @@ public class formExplorer extends javax.swing.JFrame implements TableModelListen
                         + ext;
                 String oldValue = dir + model.getCellOldValue() + ext;
 
-                if (!adb.renameFile(oldValue, newValue)) {
-                    jTableSP.setValueAt(model.getCellOldValue(),
-                            model.getCellOldRow(),
-                            model.getCellOldCol());
-                }
+                adb.asyncRenameFile(oldValue, newValue, model);
             }
         }
 
+    }
+
+    public void updateTableModelSP(ModelSPFolders model)
+    {
+        final TableModelListener obj = this;
+        jTableSP.setModel(model, obj);
+    }
+
+    public void refreshAfterRename(ModelSPFolders model)
+    {
+        jTableSP.setValueAt(model.getCellOldValue(),
+                model.getCellOldRow(),
+                model.getCellOldCol());
+    }
+
+    public void refreshTablePC()
+    {
+        try {
+            jTablePC.setModel(exp.setPath(), null);
+        } catch (Exception e) {
+            Logger.writeToLog(e);
+            e.printStackTrace();
+        }
     }
 }
