@@ -1,4 +1,4 @@
-package adb.actions;
+package actions;
 
 public abstract class AbstractAction implements IAction, Runnable {
 
